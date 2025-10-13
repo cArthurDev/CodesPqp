@@ -74,9 +74,7 @@ Logo moderna que mistura programação, criatividade e tecnologia, com um mascot
 
 ## 👨‍💻 Autor
 
-Feita por [cArthurDev]
-Feita por [Maria-Cassis]
-Feita por [WaisGH]  
+Feita por [cArthurDev], [Maria-Cassis], [WaisGH]  
 2025  
 Inspirada por um trabalho da Matéria `Compiladores` o jeitinho brasileiro de ensinar e resolver problemas.
 
