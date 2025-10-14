@@ -67,7 +67,7 @@ Bem-vindo ao repositório da **Codes Pqp** — Programa Qualitativo Perfeito, um
 
 ## 🚀 Exemplo de código
 
-// Declaração de variáveis
+<pre> ```// Declaração de variáveis
 VAR x = 10;
 VAR y = 5;
 
@@ -99,7 +99,7 @@ RETOR n * 2;
 }
 
 ESCREVEAI "Dobro de y: " + dobro(y);
-
+``` </pre>
 ---
 
 ## 📚 Estrutura do Projeto
