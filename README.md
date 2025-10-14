@@ -10,26 +10,95 @@ Bem-vindo ao repositório da **Codes Pqp** — Programa Qualitativo Perfeito, um
 
 **Codes Pqp** é uma linguagem de programação criada para unir simplicidade, expressividade e identidade nacional. Sua sintaxe é baseada no português, usando comandos fáceis de entender e mensagens amigáveis, pensadas tanto para quem está aprendendo quanto para quem gosta de praticidade.
 
-- **Comandos em português**: palavras-chave como `VAR`, `ESCREVEAI`, `SE`
-- **Mensagens claras e diretas**
-- **Sintaxe inspirada no dia a dia brasileiro**
-- **Exemplos de uso para aprender brincando**
+## 🧰 O que o Codes PQP tem
+
+- **Comandos de declaração de variável**
+  - `VAR x = valor;`
+  - Suporte a inicialização opcional
+
+- **Impressão na tela**
+  - `ESCREVEAI valor;`
+
+- **Leitura de entrada**
+  - `LEAI nomeVariavel;`
+
+- **Estrutura condicional**
+  - `SE (condicao) { ... } SENAO { ... }`
+  - IF/ELSE com blocos ou comandos simples
+
+- **Laço de repetição**
+  - `VOLTAINFINITA (condicao) { ... }`
+  - Comando `PAREI;` para sair do loop
+
+- **Atribuição**
+  - `x = valor;`
+
+- **Blocos de código**
+  - `{ ... }`
+
+- **Funções do usuário**
+  - `FUNCAO nome(parâmetros) { corpo }`
+  - Parâmetros, escopo local e `RETOR valor;`
+
+- **Switch-case**
+  - `ESCOLHEAI expr { CASO valor: bloco PADRAO: bloco }`
+
+- **Tipos suportados**
+  - Inteiro (`INTEIRO`), Float (`QUEBRADO`), Booleano (`ISSOAI`/`MENTIRA`), String (`"texto"`), Nulo (`NULO`)
+
+- **Operadores e expressões**
+  - `+`, `-`, `*`, `/`, `%`, `==`, `!=`, `>`, `<`, `>=`, `<=`, `!`, parênteses
+
+- **Mensagens de erro em português**
+
+- **Árvore de sintaxe abstrata (AST) já implementada**
+
+- **Interpretador completo (controle de variáveis, escopo e funções)**
+
+---
+
+## ❌ Adições Futuras
+
+- Suporte a arrays, listas ou matrizes
+- Objetos ou estrutura de dados complexos
+- Operações com arquivos, rede ou biblioteca padrão avançada
 
 ---
 
 ## 🚀 Exemplo de código
 
-// Declarando uma variável
-VAR x = 7;
+// Declaração de variáveis
+VAR x = 10;
+VAR y = 5;
+
+// Operação aritmética e impressão
+VAR soma = x + y;
+ESCREVEAI "Soma: " + soma;
 
 // Estrutura condicional
-SE (x > 5) {
-ESCREVEAI "Acima de cinco!";
+SE (x > y) {
+ESCREVEAI "x é maior que y";
 } SENAO {
-ESCREVEAI "Cinco ou menos!";
+ESCREVEAI "y é maior ou igual a x";
 }
 
-text
+// Laço de repetição
+VAR i = 0;
+VOLTAINFINITA (i < 3) {
+ESCREVEAI "Contador: " + i;
+i = i + 1;
+SE (i == 3) {
+ESCREVEAI "Fim da contagem!";
+PAREI;
+}
+}
+
+// Função simples e chamada
+FUNCAO dobro(n) {
+RETOR n * 2;
+}
+
+ESCREVEAI "Dobro de y: " + dobro(y);
 
 ---
 
