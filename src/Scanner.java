@@ -92,12 +92,18 @@ public class Scanner {
         while (Character.isLetterOrDigit(peek())) advance(); // Consome letras/dígitos
         String text = source.substring(start, current);      // Pega o texto
         TokenType type = keywords.get(text);                 // É palavra-chave ou identificador normal?
-        if (type != null) addToken(type);
-        else addToken(TokenType.IDENTIFIER);
+        if (type != null) {
+            addToken(type);
+        }
+        else {
+            addToken(TokenType.IDENTIFIER);
+        }
     }
 
     // Retorna se o caractere é um dígito
-    private boolean isDigit(char c) { return c >= '0' && c <= '9'; }
+    private boolean isDigit(char c) {
+        return c >= '0' && c <= '9';
+    }
 
     // Analisa e adiciona um número (inteiro ou decimal)
     private void number() {
@@ -107,7 +113,9 @@ public class Scanner {
             while (isDigit(peek())) advance(); // Consome parte decimal
         }
         String texto = source.substring(start, current);
-        if (texto.contains(".")) addToken(TokenType.NUMBER, Double.parseDouble(texto)); // Número decimal
+        if (texto.contains(".")) {
+            addToken(TokenType.NUMBER, Double.parseDouble(texto)); // Número decimal
+        }
         else addToken(TokenType.NUMBER, Integer.parseInt(texto));                       // Número inteiro
     }
 
@@ -136,24 +144,34 @@ public class Scanner {
 
     // Retorna o caractere atual sem consumir
     private char peek() {
-        if (isAtEnd()) return '\0';
+        if (isAtEnd()) {
+            return '\0';
+        }
         return source.charAt(current);
     }
 
     // Retorna o caractere seguinte sem consumir
     private char peekNext() {
-        if (current + 1 >= source.length()) return '\0';
+        if (current + 1 >= source.length()){
+            return '\0';
+        }
         return source.charAt(current + 1);
     }
 
     // Consome e retorna o próximo caractere do source
-    private char advance() { return source.charAt(current++); }
+    private char advance() {
+        return source.charAt(current++);
+    }
 
     // Retorna true se o fim do texto foi alcançado
-    private boolean isAtEnd() { return current >= source.length(); }
+    private boolean isAtEnd() {
+        return current >= source.length();
+    }
 
     // Adiciona um token simples (sem valor literal)
-    private void addToken(TokenType type) { addToken(type, null); }
+    private void addToken(TokenType type) {
+        addToken(type, null);
+    }
 
     // Adiciona um token ao vetor de tokens, informando tipo, lexema, valor, linha e coluna
     private void addToken(TokenType type, Object literal) {

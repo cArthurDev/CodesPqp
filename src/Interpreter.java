@@ -316,26 +316,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
-    // Retorna o valor do elemento índice do array
-    @Override
-    public Object visitArrayGetExpr(Expr.ArrayGet expr) {
-        Token nomeToken = ((Expr.Variable) expr.array).name;
-        int idx = (int) evaluate(expr.index);
-        Object[] arr = (Object[]) environment.get(nomeToken);
-        return arr[idx];
-    }
-
-    // Define o valor do elemento índice do array
-    @Override
-    public Object visitArraySetExpr(Expr.ArraySet expr) {
-        Token nomeToken = ((Expr.Variable) expr.array).name;
-        Object[] arr = (Object[]) environment.get(nomeToken);
-        int i = (int) evaluate(expr.index);
-        arr[i] = evaluate(expr.value);
-        return arr[i];
-    }
-
-    // Avalia uma expressão chamando o método accept do padrão visitor
+    // Avalia uma expressão chamando o metodo accept do padrão visitor
     private Object evaluate(Expr expr) {
         return expr.accept(this);
     }
@@ -345,9 +326,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         stmt.accept(this);
     }
 
-    // Executa um bloco de comandos em um ambiente/local escopo.
-    // O Parametro statements Lista de comandos a executar.
-    // O Parametro environment Ambiente que representa o novo escopo local.
+    // Executa um bloco de comandos em um ambiente/local escopo, O Parametro statements Lista de comandos a executar e o Parametro environment Ambiente que representa o novo escopo local.
 
     void executeBlock(List<Stmt> statements, Environment environment) {
         Environment previous = this.environment;

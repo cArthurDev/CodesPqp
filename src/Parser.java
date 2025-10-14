@@ -61,6 +61,7 @@ public class Parser {
         rules[TokenType.TRUE.ordinal()]         = new ParseRule(Parser::literal, null, Precedence.NONE);
         rules[TokenType.FALSE.ordinal()]        = new ParseRule(Parser::literal, null, Precedence.NONE);
         rules[TokenType.NIL.ordinal()]          = new ParseRule(Parser::literal, null, Precedence.NONE);
+
         // Palavras-chave, que não iniciam expressão
         rules[TokenType.PRINT.ordinal()]        = new ParseRule(null, null, Precedence.NONE);
         rules[TokenType.VAR.ordinal()]          = new ParseRule(null, null, Precedence.NONE);
@@ -245,12 +246,14 @@ public class Parser {
     private static Expr number(Parser parser) {
         return new Expr.Literal(parser.previous().literal);
     }
+
     private static Expr binary(Parser parser, Expr left) {
         Token operator = parser.previous();
         Precedence precedence = getRule(operator.type).precedence;
         Expr right = parser.parsePrecedence(Precedence.values()[precedence.ordinal() + 1]);
         return new Expr.Binary(left, operator, right);
     }
+
     private static Expr assign(Parser parser, Expr left) {
         if (!(left instanceof Expr.Variable))
             throw new RuntimeException("Alvo de atribuição inválido!");
@@ -258,22 +261,27 @@ public class Parser {
         Expr value = parser.parsePrecedence(Precedence.ASSIGNMENT);
         return new Expr.Assign(name, value);
     }
+
     private static Expr grouping(Parser parser) {
         Expr expr = parser.expression();
         parser.consume(TokenType.RIGHTPAREN, "Esperava ')' após expressão.");
         return new Expr.Grouping(expr);
     }
+
     private static Expr unary(Parser parser) {
         Token operator = parser.previous();
         Expr right = parser.parsePrecedence(Precedence.UNARY);
         return new Expr.Unary(operator, right);
     }
+
     private static Expr variable(Parser parser) {
         return new Expr.Variable(parser.previous());
     }
+
     private static Expr string(Parser parser) {
         return new Expr.Literal(parser.previous().literal);
     }
+
     private static Expr literal(Parser parser) {
         Token token = parser.previous();
         if (token.type == TokenType.TRUE) return new Expr.Literal(Optional.of(true));
@@ -281,6 +289,7 @@ public class Parser {
         if (token.type == TokenType.NIL) return new Expr.Literal(null);
         return new Expr.Literal(token.literal);
     }
+
     private static Expr call(Parser parser, Expr callee) {
         List<Expr> arguments = new ArrayList<>();
         if (!parser.check(TokenType.RIGHTPAREN)) {
@@ -301,10 +310,12 @@ public class Parser {
         if (check(type)) return advance();
         throw new RuntimeException("Erro na linha " + previous().line + ": " + message + " (encontrado: " + previous().lexeme + ")");
     }
+
     private boolean check(TokenType type) {
         if (isAtEnd()) return false;
         return peek().type == type;
     }
+
     private boolean match(TokenType... types) {
         for (TokenType type : types) {
             if (check(type)) {
@@ -314,6 +325,14 @@ public class Parser {
         }
         return false;
     }
-    private boolean isAtEnd() { return peek().type == TokenType.EOF; }
-    private static ParseRule getRule(TokenType type) { return rules[type.ordinal()]; }
+
+    private boolean isAtEnd() {
+        return peek().type == TokenType.EOF;
+    }
+
+    private static ParseRule getRule(TokenType type) {
+        return rules[type.ordinal()];
+    }
+
+
 }

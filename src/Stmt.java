@@ -25,7 +25,9 @@ abstract class Stmt {
     static class Print extends Stmt {
         final Expr expression; // Expressão a ser impressa
         Print(Expr expression) { this.expression = expression; }
-        @Override <R> R accept(Visitor<R> visitor) { return visitor.visitPrintStmt(this); }
+        @Override <R> R accept(Visitor<R> visitor) {
+            return visitor.visitPrintStmt(this);
+        }
     }
 
     // Declaração de variável
@@ -48,7 +50,9 @@ abstract class Stmt {
             this.initializer = initializer;
         }
 
-        @Override <R> R accept(Visitor<R> visitor) { return visitor.visitVarStmt(this); }
+        @Override <R> R accept(Visitor<R> visitor) {
+            return visitor.visitVarStmt(this);
+        }
     }
 
     // Definição de função
@@ -61,7 +65,9 @@ abstract class Stmt {
             this.parameters = parameters;
             this.body = body;
         }
-        @Override <R> R accept(Visitor<R> visitor) { return visitor.visitFunctionStmt(this); }
+        @Override <R> R accept(Visitor<R> visitor) {
+            return visitor.visitFunctionStmt(this);
+        }
     }
 
     // Comando return
@@ -72,7 +78,9 @@ abstract class Stmt {
             this.keyword = keyword;
             this.value = value;
         }
-        @Override <R> R accept(Visitor<R> visitor) { return visitor.visitReturnStmt(this); }
+        @Override <R> R accept(Visitor<R> visitor) {
+            return visitor.visitReturnStmt(this);
+        }
     }
 
     // Estrutura condicional if/else
@@ -85,21 +93,27 @@ abstract class Stmt {
             this.thenBranch = thenBranch;
             this.elseBranch = elseBranch;
         }
-        @Override <R> R accept(Visitor<R> visitor) { return visitor.visitIfStmt(this); }
+        @Override <R> R accept(Visitor<R> visitor) {
+            return visitor.visitIfStmt(this);
+        }
     }
 
     // Bloco de comandos entre chaves
     static class Block extends Stmt {
         final List<Stmt> statements; // Lista de comandos do bloco
         Block(List<Stmt> statements) { this.statements = statements; }
-        @Override <R> R accept(Visitor<R> visitor) { return visitor.visitBlockStmt(this); }
+        @Override <R> R accept(Visitor<R> visitor) {
+            return visitor.visitBlockStmt(this);
+        }
     }
 
     // Comando de expressão simples (ex: chamada de função ou expressão isolada)
     static class Expression extends Stmt {
         final Expr expr; // Expressão a ser avaliada
         Expression(Expr expr) { this.expr = expr; }
-        @Override <R> R accept(Visitor<R> visitor) { return visitor.visitExpressionStmt(this); }
+        @Override <R> R accept(Visitor<R> visitor) {
+            return visitor.visitExpressionStmt(this);
+        }
     }
 
     // Laço while tradicional
@@ -110,7 +124,9 @@ abstract class Stmt {
             this.condition = condition;
             this.body = body;
         }
-        @Override <R> R accept(Visitor<R> visitor) { return visitor.visitWhileStmt(this); }
+        @Override <R> R accept(Visitor<R> visitor) {
+            return visitor.visitWhileStmt(this);
+        }
     }
 
     // Estrutura switch-case completa
@@ -123,7 +139,9 @@ abstract class Stmt {
             this.cases = cases;
             this.defaultCase = defaultCase;
         }
-        public <R> R accept(Visitor<R> visitor) { return visitor.visitSwitchStmt(this); }
+        public <R> R accept(Visitor<R> visitor) {
+            return visitor.visitSwitchStmt(this);
+        }
     }
 
     // Define um caso de switch-case (CASO ou PADRÃO)

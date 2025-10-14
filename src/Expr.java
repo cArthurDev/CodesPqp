@@ -7,13 +7,11 @@ public abstract class Expr {
     public interface Visitor<R> {
         R visitAssignExpr(Assign expr);        // Para atribuição
         R visitBinaryExpr(Binary expr);        // Para operações binárias (+, -, etc)
-        R visitCallExpr(Call expr);            // Para chamada de função/método
+        R visitCallExpr(Call expr);            // Para chamada de função/metodo
         R visitGroupingExpr(Grouping expr);    // Para expressões agrupadas (parenteses)
         R visitLiteralExpr(Literal expr);      // Para valores literais
         R visitUnaryExpr(Unary expr);          // Para operações unárias (-, !, etc)
         R visitVariableExpr(Variable expr);    // Para uso de variáveis
-        R visitArrayGetExpr(ArrayGet expr);    // Para acessar elemento de array
-        R visitArraySetExpr(ArraySet expr);    // Para atribuir valor em array
     }
 
     // Cada expressão sabe como "aceitar" um visitante.
@@ -108,31 +106,4 @@ public abstract class Expr {
         }
     }
 
-    // Acesso a elemento do array: nomes[2]
-    public static class ArrayGet extends Expr {
-        public final Expr array;
-        public final Expr index;
-        public ArrayGet(Expr array, Expr index) {
-            this.array = array;
-            this.index = index;
-        }
-        public <R> R accept(Visitor<R> visitor) {
-            return visitor.visitArrayGetExpr(this);
-        }
-    }
-
-    // Atribuição em array: nomes[2] = "João"
-    public static class ArraySet extends Expr {
-        public final Expr array;
-        public final Expr index;
-        public final Expr value;
-        public ArraySet(Expr array, Expr index, Expr value) {
-            this.array = array;
-            this.index = index;
-            this.value = value;
-        }
-        public <R> R accept(Visitor<R> visitor) {
-            return visitor.visitArraySetExpr(this);
-        }
-    }
 }
