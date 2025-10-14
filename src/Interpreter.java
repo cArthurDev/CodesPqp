@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 // Classe responsável por interpretar as expressões e comandos da linguagem.
 // Implementa os visitantes para avaliações de expressões e execução de comandos.
-
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     // Ambiente atual com variáveis e seus valores, suporta escopos aninhados

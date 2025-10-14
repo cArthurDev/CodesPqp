@@ -10,3 +10,4 @@ public enum Precedence {
     CALL,         // Chamada de função/metodo e acesso
     PRIMARY       // Literais, identificadores, expressões agrupadas
 }
+

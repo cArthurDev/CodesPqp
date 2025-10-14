@@ -302,7 +302,6 @@ public class Parser {
     }
 
     // ****** Utilitários para navegação de tokens ******
-
     private Token previous() { return tokens.get(current - 1); }
     private Token peek()     { return tokens.get(current); }
     private Token advance()  { if (!isAtEnd()) current++; return previous(); }

@@ -129,6 +129,7 @@ abstract class Stmt {
         }
     }
 
+
     // Estrutura switch-case completa
     public static class Switch extends Stmt {
         public final Expr expr;                // Expressão a ser comparada

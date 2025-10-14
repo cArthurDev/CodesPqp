@@ -8,6 +8,7 @@ public class Main {
         try {
             String programa = new String(Files.readAllBytes(Paths.get("C:/Users/arthu/IdeaProjects/compiladorcodigo/src/programa.txt")));
             Scanner scanner = new Scanner(programa);
+
             List<Token> tokens = scanner.scanTokens();
             Parser parser = new Parser(tokens);
             List<Stmt> statements = parser.parse();

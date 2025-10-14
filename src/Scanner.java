@@ -9,6 +9,7 @@ public class Scanner {
     private int line = 1;     // Indica o número da linha atual para relatórios de erro
     private static final Map<String, TokenType> keywords; // Mapeia palavras-chave para tipos de token
 
+
     // Bloco static para inicializar o mapa de palavras-chave e seus tipos
     static {
         keywords = new HashMap<>();
