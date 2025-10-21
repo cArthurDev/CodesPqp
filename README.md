@@ -118,14 +118,13 @@ ESCREVEAI "Dobro de y: " + dobro(y);
 git clone https://github.com/seu-usuario/codes-pqp.git
 cd codes-pqp
 
-text
 2. Compile os arquivos Java:
 javac *.java
 
 3. Rode o interpretador (ajuste o comando conforme sua classe principal):
 java Main
 
-4. Escreva seus códigos Codes Pqp e execute!
+4. Escreva seus códigos Codes Pqp no programa.txt e execute!
 
 ---
 
