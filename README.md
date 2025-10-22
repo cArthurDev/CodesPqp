@@ -134,12 +134,6 @@ O “Pqp” de Codes Pqp significa **Programa Qualitativo Perfeito**, porque a m
 
 ---
 
-## 🎨 Logo
-
-Logo moderna que mistura programação, criatividade e tecnologia, com um mascote astronauta usando notebook em tons de roxo.
-
----
-
 ## 👨‍💻 Autor
 
 Feita por [cArthurDev], [Maria-Cassis], [WaisGH]  
@@ -154,6 +148,3 @@ Este projeto é open-source, pode ser adaptado, estudado e remixado para fins di
 
 ---
 
-## 📢 Contato
-
-Sugestões, ideias ou bugs? Abra uma issue ou envie um pull request!
