@@ -14,22 +14,6 @@ public class Main {
             Parser parser = new Parser(tokens);
             List<Stmt> statements = parser.parse();
 
-            // COLETA E IMPRESSÃO DAS EXPRESSÕES
-            ExprCollector collector = new ExprCollector();
-            for (Stmt stmt : statements) {
-                stmt.accept(collector);
-            }
-            System.out.println("Expressões presentes no programa:");
-            for (Expr expr : collector.getExprs()) {
-                System.out.println(
-                        "Tipo: " + expr.getTypeName() +
-                        ", Linha: " + expr.getLine() +
-                        ", Expressão: " + expr.toString()
-                );
-
-            }
-            System.out.println("-----");
-
             Interpreter interpreter = new Interpreter();
             interpreter.interpret(statements);
         } catch (IOException e) {
