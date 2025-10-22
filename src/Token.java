@@ -21,3 +21,5 @@ public class Token {
         return type + " " + lexeme + " " + literal + " linha=" + line + " coluna=" + column;
     }
 }
+
+

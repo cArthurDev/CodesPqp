@@ -17,3 +17,4 @@ public enum TokenType {
     LESSEQUAL, GREATEREQUAL, PERCENT,
     DOT
 }
+

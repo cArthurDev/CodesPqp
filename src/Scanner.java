@@ -15,7 +15,7 @@ public class Scanner {
         keywords = new HashMap<>();
         keywords.put("VAR", TokenType.VAR);                   // Declaração de variável
         keywords.put("FUNCAO", TokenType.FUN);                // Declaração de função
-        keywords.put("RETOR", TokenType.RETURN);              // Retorno de função
+        keywords.put("RETORNA", TokenType.RETURN);              // Retorno de função
         keywords.put("ESCREVEAI", TokenType.PRINT);           // Comando de impressão
         keywords.put("FAZAVOLTA", TokenType.FOR);             // Laço for
         keywords.put("VOLTAINFINITA", TokenType.WHILE);       // Laço while
@@ -29,7 +29,7 @@ public class Scanner {
         keywords.put("ESCOLHEAI", TokenType.SWITCH);          // Estrutura switch
         keywords.put("CASO", TokenType.CASE);                 // case do switch
         keywords.put("PADRAO", TokenType.DEFAULT);            // default do switch
-        keywords.put("LEAI", TokenType.INPUT);                // Leitura de entrada
+        keywords.put("LEIA", TokenType.INPUT);                // Leitura de entrada
         keywords.put("PAREI", TokenType.BREAK);               // break de laço/switch
     }
 

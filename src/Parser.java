@@ -61,7 +61,6 @@ public class Parser {
         rules[TokenType.TRUE.ordinal()]         = new ParseRule(Parser::literal, null, Precedence.NONE);
         rules[TokenType.FALSE.ordinal()]        = new ParseRule(Parser::literal, null, Precedence.NONE);
         rules[TokenType.NIL.ordinal()]          = new ParseRule(Parser::literal, null, Precedence.NONE);
-
         // Palavras-chave, que não iniciam expressão
         rules[TokenType.PRINT.ordinal()]        = new ParseRule(null, null, Precedence.NONE);
         rules[TokenType.VAR.ordinal()]          = new ParseRule(null, null, Precedence.NONE);

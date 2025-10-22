@@ -325,7 +325,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         stmt.accept(this);
     }
 
-    // Executa um bloco de comandos em um ambiente/local escopo, O Parametro statements Lista de comandos a executar e o Parametro environment Ambiente que representa o novo escopo local.
+    // Executa um bloco de comandos em um ambiente/local escopo, O Parametro statements Lista de comandos a executar
+    // e o Parametro environment Ambiente que representa o novo escopo local.
 
     void executeBlock(List<Stmt> statements, Environment environment) {
         Environment previous = this.environment;

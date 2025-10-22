@@ -16,20 +16,20 @@ VOLTAINFINITA (opcao != 0) {
     ESCREVEAI "2 - Ver último aluno cadastrado";
     ESCREVEAI "0 - Sair";
     ESCREVEAI "Escolha a opção:";
-    LEAI opcao;
+    LEIA opcao;
 
     ESCOLHEAI opcao {
         CASO 1: {
             ESCREVEAI "Nome:";
-            LEAI nome;
+            LEIA nome;
             ESCREVEAI "Idade:";
-            LEAI idade;
+            LEIA idade;
             ESCREVEAI "Nota1:";
-            LEAI nota1;
+            LEIA nota1;
             ESCREVEAI "Nota2:";
-            LEAI nota2;
+            LEIA nota2;
             ESCREVEAI "Nota3:";
-            LEAI nota3;
+            LEIA nota3;
             media = (nota1 + nota2 + nota3) / 3;
             SE (media >= 7) {
                 status = "APROVADO";
