@@ -1,3 +1,11 @@
+package Semantica;
+
+import Lexica.Scanner;
+import Lexica.Token;
+import Sintatica.Expr;
+import Sintatica.Parser;
+import Sintatica.Stmt;
+
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;

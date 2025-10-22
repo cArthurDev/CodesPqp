@@ -1,4 +1,6 @@
-// Classe que representa um token reconhecido pelo analisador léxico (Scanner)
+package Lexica;
+
+// Classe que representa um token reconhecido pelo analisador léxico (Lexica.Scanner)
 public class Token {
     public final TokenType type; // Tipo do token (ex: IDENTIFIER, PLUS, IF, NUMBER, etc)
     public final String lexeme; // Lexema: o texto literal do token no código-fonte

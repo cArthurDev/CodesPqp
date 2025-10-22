@@ -1,8 +1,13 @@
+package Sintatica;
+
+import Lexica.Token;
+import Lexica.TokenType;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
-// Parser que transforma tokens em comandos e expressões (AST).
+// Sintatica.Parser que transforma tokens em comandos e expressões (AST).
 // Suporta precedência de operadores, controle de fluxo (if, while, switch),
 // e declarações (variáveis, print, input, etc).
 

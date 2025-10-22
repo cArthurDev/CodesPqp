@@ -104,11 +104,11 @@ ESCREVEAI "Dobro de y: " + dobro(y);
 
 ## 📚 Estrutura do Projeto
 
-- `Scanner.java` — análise léxica (transforma texto em tokens)
-- `Token.java` / `TokenType.java` — estrutura dos tokens da linguagem
-- `Parser.java` — análise sintática (criação da AST)
-- `Expr.java` / `Stmt.java` — definição da árvore sintática abstrata
-- `Interpreter.java` — execução e análise semântica; faz a linguagem funcionar!
+- `Lexica.Scanner.java` — análise léxica (transforma texto em tokens)
+- `Lexica.Token.java` / `Lexica.TokenType.java` — estrutura dos tokens da linguagem
+- `Sintatica.Parser.java` — análise sintática (criação da AST)
+- `Sintatica.Expr.java` / `Sintatica.Stmt.java` — definição da árvore sintática abstrata
+- `Semantica.Interpreter.java` — execução e análise semântica; faz a linguagem funcionar!
 
 ---
 

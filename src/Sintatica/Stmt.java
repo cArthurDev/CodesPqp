@@ -1,10 +1,14 @@
+package Sintatica;
+
+import Lexica.Token;
+
 import java.util.List;
 
 // Classe abstrata para todos os tipos de comandos (statements) da linguagem
-abstract class Stmt {
+public abstract class Stmt {
 
     // Visitor para padrões do interpretador (Visitor Pattern)
-    interface Visitor<R> {
+    public interface Visitor<R> {
         R visitPrintStmt(Print stmt);         // Comando de impressão
         R visitVarStmt(Var stmt);             // Declaração de variável
         R visitFunctionStmt(Function stmt);   // Declaração de função
@@ -19,22 +23,24 @@ abstract class Stmt {
     }
 
     // Qualquer comando deve aceitar um visitor
-    abstract <R> R accept(Visitor<R> visitor);
+    public abstract <R> R accept(Visitor<R> visitor);
 
     // Comando de impressão de valor
-    static class Print extends Stmt {
-        final Expr expression; // Expressão a ser impressa
+    public static class Print extends Stmt {
+        public final Expr expression;// Expressão a ser impressa
         Print(Expr expression) { this.expression = expression; }
-        @Override <R> R accept(Visitor<R> visitor) {
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
             return visitor.visitPrintStmt(this);
         }
+
     }
 
     // Declaração de variável
-    static class Var extends Stmt {
-        final Token type;           // Tipo da variável (pode ser nulo)
-        final Token name;           // Nome da variável
-        final Expr initializer;     // Expressão de inicialização
+    public static class Var extends Stmt {
+        public final Token type;           // Tipo da variável (pode ser nulo)
+        public final Token name;           // Nome da variável
+        public final Expr initializer;     // Expressão de inicialização
 
         // Construtor para var explícita: ex: inteiro x = 5;
         Var(Token type, Token name, Expr initializer) {
@@ -50,81 +56,88 @@ abstract class Stmt {
             this.initializer = initializer;
         }
 
-        @Override <R> R accept(Visitor<R> visitor) {
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
             return visitor.visitVarStmt(this);
         }
     }
 
     // Definição de função
-    static class Function extends Stmt {
-        final Token name;                // Nome da função
-        final List<Token> parameters;    // Lista de parâmetros
-        final List<Stmt> body;           // Corpo da função (bloco de comandos)
+    public static class Function extends Stmt {
+        public final Token name;                // Nome da função
+        public final List<Token> parameters;    // Lista de parâmetros
+        public final List<Stmt> body;           // Corpo da função (bloco de comandos)
         Function(Token name, List<Token> parameters, List<Stmt> body) {
             this.name = name;
             this.parameters = parameters;
             this.body = body;
         }
-        @Override <R> R accept(Visitor<R> visitor) {
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
             return visitor.visitFunctionStmt(this);
         }
     }
 
     // Comando return
-    static class Return extends Stmt {
-        final Token keyword;   // Token RETURN
-        final Expr value;      // Valor a retornar (pode ser nulo)
+    public static class Return extends Stmt {
+        public final Token keyword;   // Lexica.Token RETURN
+        public final Expr value;      // Valor a retornar (pode ser nulo)
         Return(Token keyword, Expr value) {
             this.keyword = keyword;
             this.value = value;
         }
-        @Override <R> R accept(Visitor<R> visitor) {
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
             return visitor.visitReturnStmt(this);
         }
     }
 
     // Estrutura condicional if/else
-    static class If extends Stmt {
-        final Expr condition;         // Expressão condicional
-        final Stmt thenBranch;        // Bloco do if
-        final Stmt elseBranch;        // Bloco do else (pode ser nulo)
+    public static class If extends Stmt {
+        public final Expr condition;         // Expressão condicional
+        public final Stmt thenBranch;        // Bloco do if
+        public final Stmt elseBranch;        // Bloco do else (pode ser nulo)
         If(Expr condition, Stmt thenBranch, Stmt elseBranch) {
             this.condition = condition;
             this.thenBranch = thenBranch;
             this.elseBranch = elseBranch;
         }
-        @Override <R> R accept(Visitor<R> visitor) {
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
             return visitor.visitIfStmt(this);
         }
     }
 
     // Bloco de comandos entre chaves
-    static class Block extends Stmt {
-        final List<Stmt> statements; // Lista de comandos do bloco
+    public static class Block extends Stmt {
+        public final List<Stmt> statements; // Lista de comandos do bloco
         Block(List<Stmt> statements) { this.statements = statements; }
-        @Override <R> R accept(Visitor<R> visitor) {
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
             return visitor.visitBlockStmt(this);
         }
     }
 
     // Comando de expressão simples (ex: chamada de função ou expressão isolada)
-    static class Expression extends Stmt {
-        final Expr expr; // Expressão a ser avaliada
+    public static class Expression extends Stmt {
+        public final Expr expr; // Expressão a ser avaliada
         Expression(Expr expr) { this.expr = expr; }
-        @Override <R> R accept(Visitor<R> visitor) {
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
             return visitor.visitExpressionStmt(this);
         }
     }
 
     // Laço while tradicional
-    static class While extends Stmt {
-        final Expr condition; // Condição do laço
-        final Stmt body;      // Corpo do laço
+    public static class While extends Stmt {
+        public final Expr condition; // Condição do laço
+        public final Stmt body;      // Corpo do laço
         While(Expr condition, Stmt body) {
             this.condition = condition;
             this.body = body;
         }
-        @Override <R> R accept(Visitor<R> visitor) {
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
             return visitor.visitWhileStmt(this);
         }
     }
@@ -156,10 +169,11 @@ abstract class Stmt {
     }
 
     // Comando de leitura de entrada (input)
-    static class Input extends Stmt {
-        final Token name; // Nome da variável de destino
+    public static class Input extends Stmt {
+        public final Token name; // Nome da variável de destino
         Input(Token name) { this.name = name; }
-        @Override <R> R accept(Visitor<R> visitor) { return visitor.visitInputStmt(this); }
+        @Override
+        public <R> R accept(Visitor<R> visitor) { return visitor.visitInputStmt(this); }
     }
 
     // Comando break para laço ou switch

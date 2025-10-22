@@ -1,3 +1,5 @@
+package Lexica;
+
 public enum TokenType {
 
     // Palavras-chave

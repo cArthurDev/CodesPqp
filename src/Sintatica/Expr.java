@@ -1,3 +1,7 @@
+package Sintatica;
+
+import Lexica.Token;
+
 import java.util.List;
 
 // Representa uma expressão na árvore sintática abstrata (AST).

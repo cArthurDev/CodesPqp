@@ -1,6 +1,8 @@
+package Lexica;
+
 import java.util.*;
 
-// Classe Scanner: responsável por analisar o código-fonte e gerar a lista de tokens
+// Classe Lexica.Scanner: responsável por analisar o código-fonte e gerar a lista de tokens
 public class Scanner {
     private final String source; // Armazena o texto do código-fonte a ser analisado
     private final List<Token> tokens = new ArrayList<>(); // Lista de tokens reconhecidos
