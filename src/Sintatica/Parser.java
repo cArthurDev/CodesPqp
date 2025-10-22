@@ -15,10 +15,6 @@ public class Parser {
     private final List<Token> tokens;  // Lista de tokens de entrada
     private int current = 0;           // Posição do parser nos tokens
 
-    // Precedência dos operadores: define ordem das operações
-    private enum Precedence {
-        NONE, ASSIGNMENT, EQUALITY, COMPARISON, TERM, FACTOR, UNARY, CALL, PRIMARY
-    }
 
     // Interfaces funcionais para regras prefix (iniciam expressão) e infix (entre dois lados)
     private interface ParseFnPrefix { Expr parse(Parser parser); }
