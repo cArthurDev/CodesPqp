@@ -215,7 +215,7 @@ public class Parser {
     }
 
     // Avalia uma expressão, respeitando precedência dos operadores.
-    private Expr expression() { return parsePrecedence(Precedence.ASSIGNMENT); }
+    private Expr expression() {return parsePrecedence(Precedence.ASSIGNMENT); }
 
     // Avalia uma expressão pelo nível de precedência.
     private Expr parsePrecedence(Precedence precedence) {

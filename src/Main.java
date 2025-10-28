@@ -7,7 +7,7 @@ import Lexica.Token;
 import Sintatica.Parser;
 import Sintatica.Stmt;
 import Semantica.Interpreter;
-import Utils.AstHtmlPrinter;
+import Utils.AstHtml;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,7 +16,6 @@ public class Main {
 
             String programa = new String(Files.readAllBytes(Paths.get(caminhoPrograma)));
 
-            // 2. Etapa Léxica
             Scanner scanner = new Scanner(programa);
             List<Token> tokens = scanner.scanTokens();
             System.out.println("Análise léxica concluída: " + tokens.size() + " tokens.");
@@ -31,7 +30,7 @@ public class Main {
             System.out.println("Análise sintática concluída. (" + statements.size() + " statements)");
 
             String caminhoHtml = "C:/Users/arthu/IdeaProjects/compiladorcodigo/src/arvore.html";
-            AstHtmlPrinter printer = new AstHtmlPrinter();
+            AstHtml printer = new AstHtml();
             printer.gerarHtml(statements, caminhoHtml);
             System.out.println("Arquivo HTML da AST salvo em: " + caminhoHtml);
 
