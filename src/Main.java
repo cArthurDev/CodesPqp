@@ -6,20 +6,29 @@ import Lexica.Scanner;
 import Lexica.Token;
 import Sintatica.Parser;
 import Sintatica.Stmt;
-import Semantica.Interpreter;
 import Utils.AstHtml;
+import ByteCode.Compiler;
+import ByteCode.Chunk;
+import ByteCode.VM;
 
 public class Main {
     public static void main(String[] args) {
-        try {
-            String caminhoPrograma = "C:/Users/arthu/IdeaProjects/compiladorcodigo/src/programa.cpqp";
 
+        // Usar o caminho fixo
+        String caminhoPrograma = "C:\\Users\\natna\\Downloads\\CodesPqp-master\\CodesPqp-master\\src\\programa.cpqp";
+
+        String caminhoHtml = "arvore.html";
+
+        try {
+            //Ler o ficheiro
             String programa = new String(Files.readAllBytes(Paths.get(caminhoPrograma)));
 
+            //Análise Léxica (Scanner)
             Scanner scanner = new Scanner(programa);
             List<Token> tokens = scanner.scanTokens();
             System.out.println("Análise léxica concluída: " + tokens.size() + " tokens.");
 
+            //Análise Sintática (Parser -> AST)
             Parser parser = new Parser(tokens);
             List<Stmt> statements = parser.parse();
 
@@ -29,14 +38,23 @@ public class Main {
             }
             System.out.println("Análise sintática concluída. (" + statements.size() + " statements)");
 
-            String caminhoHtml = "C:/Users/arthu/IdeaProjects/compiladorcodigo/src/arvore.html";
+            //Gerar visualização da AST
             AstHtml printer = new AstHtml();
             printer.gerarHtml(statements, caminhoHtml);
             System.out.println("Arquivo HTML da AST salvo em: " + caminhoHtml);
 
-            Interpreter interpreter = new Interpreter();
-            System.out.println("\n--------- EXECUÇÃO DO PROGRAMA ---------");
-            interpreter.interpret(statements);
+            //Compilação (AST -> Bytecode)
+            Compiler compiler = new Compiler();
+            Chunk chunk = compiler.compile(statements);
+
+            if (chunk == null) {
+                System.err.println("Falha na compilação.");
+                return;
+            }
+            System.out.println("Compilação para bytecode concluída.");
+            VM vm = new VM();
+            System.out.println("\n--------- EXECUÇÃO DA VM ---------");
+            vm.interpret(chunk);
 
         } catch (IOException e) {
             System.err.println("Erro ao ler o arquivo do programa: " + e.getMessage());

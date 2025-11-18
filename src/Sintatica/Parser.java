@@ -75,6 +75,7 @@ public class Parser {
         rules[TokenType.WHILE.ordinal()]        = new ParseRule(null, null, Precedence.NONE);
         rules[TokenType.FOR.ordinal()]          = new ParseRule(null, null, Precedence.NONE);
         rules[TokenType.EOF.ordinal()]          = new ParseRule(null, null, Precedence.NONE);
+
     }
 
     public Parser(List<Token> tokens) { this.tokens = tokens; }
@@ -116,7 +117,37 @@ public class Parser {
         if (match(TokenType.INPUT))  return inputStatement();
         if (match(TokenType.SWITCH)) return switchStatement();
         if (match(TokenType.BREAK))  return breakStatement();
+        if (match(TokenType.FUN))    return functionDeclaration("Função");
+        if (match(TokenType.RETURN)) return returnStatement();
         return expressionStatement();
+    }
+    private Stmt.Function functionDeclaration(String kind) {
+        Token name = consume(TokenType.IDENTIFIER, "Esperava nome da " + kind + ".");
+        consume(TokenType.LEFTPAREN, "Esperava '(' após nome da " + kind + ".");
+        List<Token> parameters = new ArrayList<>();
+        if (!check(TokenType.RIGHTPAREN)) { // Se não fechar parênteses, espera parâmetros
+            do {
+                if (parameters.size() >= 255) {
+                    error(peek(), "Não pode ter mais que 255 parâmetros.");
+                }
+                parameters.add(consume(TokenType.IDENTIFIER, "Esperava nome do parâmetro."));
+            } while (match(TokenType.COMMA)); // Continua enquanto houver vírgulas
+        }
+        consume(TokenType.RIGHTPAREN, "Esperava ')' após parâmetros.");
+        consume(TokenType.LEFTBRACE, "Esperava '{' antes do corpo da " + kind + ".");
+        List<Stmt> body = ((Stmt.Block) block()).statements; // block() retorna Stmt.Block
+
+        return new Stmt.Function(name, parameters, body);
+    }
+    private Stmt returnStatement() {
+        Token keyword = previous();
+        Expr value = null;
+        if (!check(TokenType.SEMICOLON)) {
+            value = expression();
+        }
+
+        consume(TokenType.SEMICOLON, "Esperava ';' após valor de retorno.");
+        return new Stmt.Return(keyword, value);
     }
 
     private Stmt ifStatement() {
@@ -284,12 +315,11 @@ public class Parser {
 
     private static Expr literal(Parser parser) {
         Token token = parser.previous();
-        if (token.type == TokenType.TRUE) return new Expr.Literal(Optional.of(true));
-        if (token.type == TokenType.FALSE) return new Expr.Literal(Optional.of(false));
+        if (token.type == TokenType.TRUE) return new Expr.Literal(true);   // <-- Correção
+        if (token.type == TokenType.FALSE) return new Expr.Literal(false); // <-- Correção
         if (token.type == TokenType.NIL) return new Expr.Literal(null);
         return new Expr.Literal(token.literal);
     }
-
     private static Expr call(Parser parser, Expr callee) {
         List<Expr> arguments = new ArrayList<>();
         if (!parser.check(TokenType.RIGHTPAREN)) {

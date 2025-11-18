@@ -1,0 +1,26 @@
+ESCREVEAI "Teste de Concatenação de Strings";
+VAR nome = "Codes";
+ESCREVEAI "Olá, " + nome + " PQP!";
+
+VAR numcomostring = "100";
+ESCREVEAI numcomostring + 50;
+
+ESCREVEAI "Teste de Input (LEIA)";
+
+ESCREVEAI "Qual é o seu nome?";
+VAR seu_nome;
+LEIA seu_nome;
+ESCREVEAI "Bem-vindo, " + seu_nome + "!";
+
+ESCREVEAI "Digite um número (ex: 5):";
+VAR num1;
+LEIA num1;
+
+ESCREVEAI "Digite outro número (ex: 8):";
+VAR num2;
+LEIA num2;
+
+ESCREVEAI "A soma dos seus números é:";
+ESCREVEAI num1 + num2;
+
+ESCREVEAI "FIM DO TESTE";

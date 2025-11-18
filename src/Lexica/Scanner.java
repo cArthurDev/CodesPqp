@@ -92,7 +92,9 @@ public class Scanner {
 
     // Analisa um identificador ou palavra-chave
     private void identifier() {
-        while (Character.isLetterOrDigit(peek())) advance(); // Consome letras/dígitos
+        while (Character.isLetterOrDigit(peek()) || peek() == '_') {
+            advance();
+        }
         String text = source.substring(start, current);      // Pega o texto
         TokenType type = keywords.get(text);                 // É palavra-chave ou identificador normal?
         if (type != null) {
