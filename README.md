@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="codespqp_logo.png" alt="Logo Codes Pqp" width="200">
+  <img src="codespqp_logo.png" alt="Logo Codes Pqp" width="1000">
 
   # Codes Pqp
   ### Programa Qualitativo Perfeito
@@ -87,7 +87,7 @@ FUNCAO dobro(n) {
 }
 
 ESCREVEAI "O dobro de Y é: " + dobro(y);
-``` <pre>
+``` </pre>
 
 ---
 
@@ -119,7 +119,7 @@ Para rodar o **Codes Pqp** na sua máquina, você precisará do [Java JDK](https
    java Main
 
 4. **Divirta-se:**
-   Edite o arquivo `programa.txt` com seus comandos Codes Pqp e veja a mágica acontecer!
+   Edite o arquivo `programa.cpqp` com seus comandos Codes Pqp e veja a mágica acontecer!
 
 ---
 
@@ -151,7 +151,7 @@ Este projeto foi desenvolvido com carinho por:
 * **[Maria-Cassis](https://github.com/Maria-Cassis)**
 * **[WaisGH](https://github.com/WaisGH)**
 
-*Inspirado nas aulas de Compiladores (2025), provando que dá para aprender rindo.*
+*Inspirado nas aulas de Compiladores (2025), provando que dá para aprender se divertindo.*
 
 ---
 
