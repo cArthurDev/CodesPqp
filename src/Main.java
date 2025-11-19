@@ -1,23 +1,26 @@
-import java.util.List;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.io.IOException;
+import ByteCode.Chunk;
+import ByteCode.Compiler;
+import ByteCode.VM;
 import Lexica.Scanner;
 import Lexica.Token;
 import Sintatica.Parser;
 import Sintatica.Stmt;
 import Utils.AstHtml;
-import ByteCode.Compiler;
-import ByteCode.Chunk;
-import ByteCode.VM;
+
+
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
 
         // Usar o caminho fixo
-        String caminhoPrograma = "C:\\Users\\natna\\Downloads\\CodesPqp-master\\CodesPqp-master\\src\\programa.cpqp";
+        String caminhoPrograma = "C:\\Users\\arthu\\OneDrive\\Desktop\\CodesPQP\\CodesPqp\\src\\programa.cpqp";
 
-        String caminhoHtml = "arvore.html";
+        String caminhoHtml = "src\\arvore.html";
 
         try {
             //Ler o ficheiro

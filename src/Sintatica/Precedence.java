@@ -3,6 +3,8 @@ package Sintatica;
 // Enum que define os níveis de precedência dos operadores
 public enum Precedence {
     NONE,         // Nenhuma precedência (usado para tokens que não participam de expressões)
+    AND,          //
+    OR,
     ASSIGNMENT,   // Atribuição (ex: =)
     EQUALITY,     // Igualdade e diferença (ex: ==, !=)
     COMPARISON,   // Comparação (ex: <, >, <=, >=)

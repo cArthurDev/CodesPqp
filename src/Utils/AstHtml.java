@@ -47,6 +47,19 @@ public class AstHtml implements Expr.Visitor<String>, Stmt.Visitor<String> {
         return tag("Chamada de função", expr.callee.accept(this) + args);
     }
 
+    // NOVOS: incremento/decremento
+    @Override
+    public String visitIncrementoExpr(Expr.Incremento expr) {
+        String tipo = expr.prefix ? "Pré-incremento" : "Pós-incremento";
+        return tag(tipo + ": " + expr.name.lexeme, "");
+    }
+
+    @Override
+    public String visitDecrementoExpr(Expr.Decremento expr) {
+        String tipo = expr.prefix ? "Pré-decremento" : "Pós-decremento";
+        return tag(tipo + ": " + expr.name.lexeme, "");
+    }
+
     // COMANDOS
     @Override
     public String visitPrintStmt(Stmt.Print stmt) {

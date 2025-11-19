@@ -7,18 +7,19 @@ import java.util.List;
 // Representa uma expressão na árvore sintática abstrata (AST).
 public abstract class Expr {
 
-    // Interface Visitor: define métodos para cada tipo de expressão.
+    // Interface Visitor expandida para todas as expressões
     public interface Visitor<R> {
-        R visitAssignExpr(Assign expr);        // Para atribuição
-        R visitBinaryExpr(Binary expr);        // Para operações binárias (+, -, etc)
-        R visitCallExpr(Call expr);            // Para chamada de função/metodo
-        R visitGroupingExpr(Grouping expr);    // Para expressões agrupadas (parenteses)
-        R visitLiteralExpr(Literal expr);      // Para valores literais
-        R visitUnaryExpr(Unary expr);          // Para operações unárias (-, !, etc)
-        R visitVariableExpr(Variable expr);    // Para uso de variáveis
+        R visitAssignExpr(Assign expr);
+        R visitBinaryExpr(Binary expr);
+        R visitCallExpr(Call expr);
+        R visitGroupingExpr(Grouping expr);
+        R visitLiteralExpr(Literal expr);
+        R visitUnaryExpr(Unary expr);
+        R visitVariableExpr(Variable expr);
+        R visitIncrementoExpr(Incremento expr);
+        R visitDecrementoExpr(Decremento expr);
     }
 
-    // Cada expressão sabe como "aceitar" um visitante.
     public abstract <R> R accept(Visitor<R> visitor);
 
     // Expressão de atribuição: x = 2
@@ -110,4 +111,33 @@ public abstract class Expr {
         }
     }
 
+    // Incremento: i++
+    public static class Incremento extends Expr {
+        public final Token name, operator;
+        public final boolean prefix;
+        public Incremento(Token name, Token operator, boolean prefix) {
+            this.name = name;
+            this.operator = operator;
+            this.prefix = prefix;
+        }
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
+            return visitor.visitIncrementoExpr(this);
+        }
+    }
+
+    // Decremento: i--
+    public static class Decremento extends Expr {
+        public final Token name, operator;
+        public final boolean prefix;
+        public Decremento(Token name, Token operator, boolean prefix) {
+            this.name = name;
+            this.operator = operator;
+            this.prefix = prefix;
+        }
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
+            return visitor.visitDecrementoExpr(this);
+        }
+    }
 }

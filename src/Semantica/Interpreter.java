@@ -22,7 +22,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     // Interpreta uma lista de comandos (statements).
     // O Parametro statements Lista de comandos a executar.
-
     public void interpret(List<Stmt> statements) {
         try {
             for (Stmt statement : statements) {
@@ -50,7 +49,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     return (String) left + (String) right;
                 }
                 throw new RuntimeException("Operadores '+' exigem dois números ou duas strings.");
-
             case MINUS:
                 if (left instanceof Integer && right instanceof Integer) {
                     return (Integer) left - (Integer) right;
@@ -59,7 +57,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     return ((Number) left).doubleValue() - ((Number) right).doubleValue();
                 }
                 throw new RuntimeException("Operador '-' exige números.");
-
             case STAR:
                 if (left instanceof Integer && right instanceof Integer) {
                     return (Integer) left * (Integer) right;
@@ -68,7 +65,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     return ((Number) left).doubleValue() * ((Number) right).doubleValue();
                 }
                 throw new RuntimeException("Operador '*' exige números.");
-
             case SLASH:
                 if (left instanceof Number && right instanceof Number) {
                     double denominator = ((Number) right).doubleValue();
@@ -77,7 +73,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     return ((Number) left).doubleValue() / denominator;
                 }
                 throw new RuntimeException("Operador '/' exige números.");
-
             case LESS:
                 return toDouble(left) < toDouble(right);
             case GREATER:
@@ -86,12 +81,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 return toDouble(left) <= toDouble(right);
             case GREATEREQUAL:
                 return toDouble(left) >= toDouble(right);
-
             case EQUALEQUAL:
                 return isEqual(left, right);
             case BANGEQUAL:
                 return !isEqual(left, right);
-
             case PERCENT:
                 if (left instanceof Integer && right instanceof Integer) {
                     return (Integer) left % (Integer) right;
@@ -100,16 +93,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     return ((Number) left).doubleValue() % ((Number) right).doubleValue();
                 }
                 throw new RuntimeException("Operador '%' exige números.");
-
             default:
                 throw new RuntimeException("Operador binário desconhecido: " + expr.operator.type);
         }
     }
 
     // Converte objeto do tipo Number para double, para operações de comparação.
-    // O Parametro "o" Objeto a converter.
-    // Retorna um Valor double do objeto.
-
     private double toDouble(Object o) {
         if (o instanceof Number) return ((Number) o).doubleValue();
         throw new RuntimeException("Operador de comparação exige números.");
@@ -130,12 +119,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if (!(callee instanceof LoxCallable)) {
             throw new RuntimeException("Só é possível chamar funções.");
         }
-
         List<Object> arguments = new java.util.ArrayList<>();
         for (Expr argument : expr.arguments) {
             arguments.add(evaluate(argument));
         }
-
         LoxCallable function = (LoxCallable) callee;
         if (arguments.size() != function.arity()) {
             throw new RuntimeException(
@@ -174,6 +161,48 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 return !isTruthy(right);
             default:
                 throw new RuntimeException("Operador unário desconhecido: " + expr.operator.type);
+        }
+    }
+
+    // *****************************************
+    //         INCREMENTO & DECREMENTO
+    // *****************************************
+    // Avalia expressão de incremento (++x ou x++)
+    @Override
+    public Object visitIncrementoExpr(Expr.Incremento expr) {
+        Object value = environment.get(expr.name);
+        if (!(value instanceof Integer)) {
+            throw new RuntimeException("Operador '++' exige variável do tipo inteiro.");
+        }
+        int resultado;
+        if (expr.prefix) {
+            resultado = ((Integer) value) + 1;
+            environment.assign(expr.name.lexeme, resultado);
+            return resultado;
+        } else {
+            resultado = ((Integer) value);
+            environment.assign(expr.name.lexeme, resultado + 1);
+            return resultado;
+        }
+    }
+
+
+    // Avalia expressão de decremento (--x ou x--)
+    @Override
+    public Object visitDecrementoExpr(Expr.Decremento expr) {
+        Object value = environment.get(expr.name);
+        if (!(value instanceof Integer)) {
+            throw new RuntimeException("Operador '--' exige variável do tipo inteiro.");
+        }
+        int resultado;
+        if (expr.prefix) {
+            resultado = ((Integer) value) - 1;
+            environment.assign(expr.name.lexeme, resultado);
+            return resultado;
+        } else {
+            resultado = ((Integer) value);
+            environment.assign(expr.name.lexeme, resultado - 1);
+            return resultado;
         }
     }
 
@@ -291,7 +320,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         String linha = consoleInput.nextLine();
         Object valor = null;
         boolean atribuiu = false;
-
         // Tenta interpretar a linha como uma atribuição da linguagem
         try {
             String fakeProg = stmt.name.lexeme + " = " + linha + ";";
@@ -306,7 +334,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         } catch (Exception exc) {
             // Ignora falhas de parsing/execution para fallback abaixo
         }
-
         if (!atribuiu) {
             // Converte para int, depois double, senão mantém string
             try {
@@ -335,7 +362,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     // Executa um bloco de comandos em um ambiente/local escopo, O Parametro statements Lista de comandos a executar
     // e o Parametro environment Ambiente que representa o novo escopo local.
-
     void executeBlock(List<Stmt> statements, Environment environment) {
         Environment previous = this.environment;
         try {
@@ -385,12 +411,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             this.declaration = declaration;
             this.closure = closure;
         }
-
         @Override
         public int arity() {
             return declaration.parameters.size();
         }
-
         @Override
         public Object call(Interpreter interpreter, List<Object> arguments) {
             Environment environment = new Environment(closure);
@@ -427,16 +451,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         Environment() {
             this.enclosing = null;
         }
-
         Environment(Environment enclosing) {
             this.enclosing = enclosing;
         }
-
         // Define uma nova variável no ambiente atual
         void define(String name, Object value) {
             values.put(name, value);
         }
-
         // Recupera o valor da variável, buscando recursivamente em ambientes pai
         Object get(Token name) {
             if (values.containsKey(name.lexeme)) {
@@ -445,7 +466,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             if (enclosing != null) return enclosing.get(name);
             throw new RuntimeException("Variável '" + name.lexeme + "' não definida.");
         }
-
         // Atribui valor a variável existente, buscando recursivamente em ambientes pai
         void assign(String name, Object value) {
             if (values.containsKey(name)) {

@@ -9,53 +9,46 @@ public abstract class Stmt {
 
     // Visitor para padrões do interpretador (Visitor Pattern)
     public interface Visitor<R> {
-        R visitPrintStmt(Print stmt);         // Comando de impressão
-        R visitVarStmt(Var stmt);             // Declaração de variável
-        R visitFunctionStmt(Function stmt);   // Declaração de função
-        R visitReturnStmt(Return stmt);       // Comando return
-        R visitIfStmt(If stmt);               // Condicional if/else
-        R visitBlockStmt(Block stmt);         // Bloco de comandos
-        R visitExpressionStmt(Expression stmt); // Comando de expressão simples
-        R visitWhileStmt(While stmt);         // Laço while
-        R visitBreakStmt(Break stmt);         // break para laço/switch
-        R visitSwitchStmt(Switch stmt);       // switch-case
-        R visitInputStmt(Input stmt);         // Leitura de entrada
+        R visitPrintStmt(Print stmt);
+        R visitVarStmt(Var stmt);
+        R visitFunctionStmt(Function stmt);
+        R visitReturnStmt(Return stmt);
+        R visitIfStmt(If stmt);
+        R visitBlockStmt(Block stmt);
+        R visitExpressionStmt(Expression stmt);
+        R visitWhileStmt(While stmt);
+        R visitBreakStmt(Break stmt);
+        R visitSwitchStmt(Switch stmt);
+        R visitInputStmt(Input stmt);
     }
 
-    // Qualquer comando deve aceitar um visitor
     public abstract <R> R accept(Visitor<R> visitor);
 
     // Comando de impressão de valor
     public static class Print extends Stmt {
-        public final Expr expression;// Expressão a ser impressa
+        public final Expr expression;
         Print(Expr expression) { this.expression = expression; }
         @Override
         public <R> R accept(Visitor<R> visitor) {
             return visitor.visitPrintStmt(this);
         }
-
     }
 
     // Declaração de variável
     public static class Var extends Stmt {
-        public final Token type;           // Tipo da variável (pode ser nulo)
-        public final Token name;           // Nome da variável
-        public final Expr initializer;     // Expressão de inicialização
-
-        // Construtor para var explícita: ex: inteiro x = 5;
+        public final Token type;
+        public final Token name;
+        public final Expr initializer;
         Var(Token type, Token name, Expr initializer) {
             this.type = type;
             this.name = name;
             this.initializer = initializer;
         }
-
-        // Construtor para var implícita (sem tipo): ex: VAR x = 5;
         Var(Token name, Expr initializer) {
             this.type = null;
             this.name = name;
             this.initializer = initializer;
         }
-
         @Override
         public <R> R accept(Visitor<R> visitor) {
             return visitor.visitVarStmt(this);
@@ -64,9 +57,9 @@ public abstract class Stmt {
 
     // Definição de função
     public static class Function extends Stmt {
-        public final Token name;                // Nome da função
-        public final List<Token> parameters;    // Lista de parâmetros
-        public final List<Stmt> body;           // Corpo da função (bloco de comandos)
+        public final Token name;
+        public final List<Token> parameters;
+        public final List<Stmt> body;
         Function(Token name, List<Token> parameters, List<Stmt> body) {
             this.name = name;
             this.parameters = parameters;
@@ -80,8 +73,8 @@ public abstract class Stmt {
 
     // Comando return
     public static class Return extends Stmt {
-        public final Token keyword;   // Lexica.Token RETURN
-        public final Expr value;      // Valor a retornar (pode ser nulo)
+        public final Token keyword;
+        public final Expr value;
         Return(Token keyword, Expr value) {
             this.keyword = keyword;
             this.value = value;
@@ -94,9 +87,9 @@ public abstract class Stmt {
 
     // Estrutura condicional if/else
     public static class If extends Stmt {
-        public final Expr condition;         // Expressão condicional
-        public final Stmt thenBranch;        // Bloco do if
-        public final Stmt elseBranch;        // Bloco do else (pode ser nulo)
+        public final Expr condition;
+        public final Stmt thenBranch;
+        public final Stmt elseBranch;
         If(Expr condition, Stmt thenBranch, Stmt elseBranch) {
             this.condition = condition;
             this.thenBranch = thenBranch;
@@ -110,7 +103,7 @@ public abstract class Stmt {
 
     // Bloco de comandos entre chaves
     public static class Block extends Stmt {
-        public final List<Stmt> statements; // Lista de comandos do bloco
+        public final List<Stmt> statements;
         Block(List<Stmt> statements) { this.statements = statements; }
         @Override
         public <R> R accept(Visitor<R> visitor) {
@@ -118,9 +111,9 @@ public abstract class Stmt {
         }
     }
 
-    // Comando de expressão simples (ex: chamada de função ou expressão isolada)
+    // Comando de expressão simples
     public static class Expression extends Stmt {
-        public final Expr expr; // Expressão a ser avaliada
+        public final Expr expr;
         Expression(Expr expr) { this.expr = expr; }
         @Override
         public <R> R accept(Visitor<R> visitor) {
@@ -130,8 +123,8 @@ public abstract class Stmt {
 
     // Laço while tradicional
     public static class While extends Stmt {
-        public final Expr condition; // Condição do laço
-        public final Stmt body;      // Corpo do laço
+        public final Expr condition;
+        public final Stmt body;
         While(Expr condition, Stmt body) {
             this.condition = condition;
             this.body = body;
@@ -142,12 +135,11 @@ public abstract class Stmt {
         }
     }
 
-
     // Estrutura switch-case completa
     public static class Switch extends Stmt {
-        public final Expr expr;                // Expressão a ser comparada
-        public final List<Case> cases;         // Lista de casos
-        public final Case defaultCase;         // Caso padrão
+        public final Expr expr;
+        public final List<Case> cases;
+        public final Case defaultCase;
         public Switch(Expr expr, List<Case> cases, Case defaultCase) {
             this.expr = expr;
             this.cases = cases;
@@ -160,8 +152,8 @@ public abstract class Stmt {
 
     // Define um caso de switch-case (CASO ou PADRÃO)
     public static class Case {
-        public final Expr value; // Valor que ativa o caso (null se PADRÃO)
-        public final Stmt stmt;  // Bloco de comandos a ser executado
+        public final Expr value;
+        public final Stmt stmt;
         public Case(Expr value, Stmt stmt) {
             this.value = value;
             this.stmt = stmt;
@@ -170,7 +162,7 @@ public abstract class Stmt {
 
     // Comando de leitura de entrada (input)
     public static class Input extends Stmt {
-        public final Token name; // Nome da variável de destino
+        public final Token name;
         Input(Token name) { this.name = name; }
         @Override
         public <R> R accept(Visitor<R> visitor) { return visitor.visitInputStmt(this); }

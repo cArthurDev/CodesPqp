@@ -5,22 +5,15 @@ import Lexica.TokenType;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Optional;
 
 // Sintatica.Parser que transforma tokens em comandos e expressões (AST).
-// Suporta precedência de operadores, controle de fluxo (if, while, switch),
-// e declarações (variáveis, print, input, etc).
-
 public class Parser {
     private final List<Token> tokens;  // Lista de tokens de entrada
     private int current = 0;           // Posição do parser nos tokens
 
-
-    // Interfaces funcionais para regras prefix (iniciam expressão) e infix (entre dois lados)
     private interface ParseFnPrefix { Expr parse(Parser parser); }
     private interface ParseFnInfix { Expr parse(Parser parser, Expr left); }
 
-    // Cada regra define como um token pode aparecer numa expressão.
     private static class ParseRule {
         final ParseFnPrefix prefix;
         final ParseFnInfix infix;
@@ -32,7 +25,6 @@ public class Parser {
         }
     }
 
-    // Mapeamento de cada tipo de token para uma regra sintática
     private static final ParseRule[] rules = new ParseRule[TokenType.values().length];
     static {
         rules[TokenType.LEFTPAREN.ordinal()]    = new ParseRule(Parser::grouping, Parser::call, Precedence.CALL);
@@ -62,7 +54,7 @@ public class Parser {
         rules[TokenType.TRUE.ordinal()]         = new ParseRule(Parser::literal, null, Precedence.NONE);
         rules[TokenType.FALSE.ordinal()]        = new ParseRule(Parser::literal, null, Precedence.NONE);
         rules[TokenType.NIL.ordinal()]          = new ParseRule(Parser::literal, null, Precedence.NONE);
-        // Palavras-chave, que não iniciam expressão
+
         rules[TokenType.PRINT.ordinal()]        = new ParseRule(null, null, Precedence.NONE);
         rules[TokenType.VAR.ordinal()]          = new ParseRule(null, null, Precedence.NONE);
         rules[TokenType.INT.ordinal()]          = new ParseRule(null, null, Precedence.NONE);
@@ -75,12 +67,16 @@ public class Parser {
         rules[TokenType.WHILE.ordinal()]        = new ParseRule(null, null, Precedence.NONE);
         rules[TokenType.FOR.ordinal()]          = new ParseRule(null, null, Precedence.NONE);
         rules[TokenType.EOF.ordinal()]          = new ParseRule(null, null, Precedence.NONE);
+        rules[TokenType.AND.ordinal()]          = new ParseRule(null, Parser::binary, Precedence.AND);
+        rules[TokenType.OR.ordinal()]           = new ParseRule(null, Parser::binary, Precedence.OR);
+
+        rules[TokenType.INCREMENTO.ordinal()]   = new ParseRule(Parser::incremento, Parser::incrementoInfix, Precedence.UNARY);
+        rules[TokenType.DECREMENTO.ordinal()]   = new ParseRule(Parser::decremento, Parser::decrementoInfix, Precedence.UNARY);
 
     }
 
     public Parser(List<Token> tokens) { this.tokens = tokens; }
 
-    // Roda o parse, retornando lista de comandos (statements)
     public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
         while (!isAtEnd()) {
@@ -94,7 +90,6 @@ public class Parser {
         return statements;
     }
 
-    // Sincronização após erro sintático para não "engasgar" parsing
     private void synchronize() {
         advance();
         while (!isAtEnd()) {
@@ -108,7 +103,6 @@ public class Parser {
         }
     }
 
-    // Escolhe qual tipo de declaração será parseada.
     private Stmt declaration() {
         if (match(TokenType.VAR))    return varDeclaration();
         if (match(TokenType.WHILE))  return whileStatement();
@@ -121,31 +115,31 @@ public class Parser {
         if (match(TokenType.RETURN)) return returnStatement();
         return expressionStatement();
     }
+
     private Stmt.Function functionDeclaration(String kind) {
         Token name = consume(TokenType.IDENTIFIER, "Esperava nome da " + kind + ".");
         consume(TokenType.LEFTPAREN, "Esperava '(' após nome da " + kind + ".");
         List<Token> parameters = new ArrayList<>();
-        if (!check(TokenType.RIGHTPAREN)) { // Se não fechar parênteses, espera parâmetros
+        if (!check(TokenType.RIGHTPAREN)) {
             do {
                 if (parameters.size() >= 255) {
                     error(peek(), "Não pode ter mais que 255 parâmetros.");
                 }
                 parameters.add(consume(TokenType.IDENTIFIER, "Esperava nome do parâmetro."));
-            } while (match(TokenType.COMMA)); // Continua enquanto houver vírgulas
+            } while (match(TokenType.COMMA));
         }
         consume(TokenType.RIGHTPAREN, "Esperava ')' após parâmetros.");
         consume(TokenType.LEFTBRACE, "Esperava '{' antes do corpo da " + kind + ".");
-        List<Stmt> body = ((Stmt.Block) block()).statements; // block() retorna Stmt.Block
-
+        List<Stmt> body = ((Stmt.Block) block()).statements;
         return new Stmt.Function(name, parameters, body);
     }
+
     private Stmt returnStatement() {
         Token keyword = previous();
         Expr value = null;
         if (!check(TokenType.SEMICOLON)) {
             value = expression();
         }
-
         consume(TokenType.SEMICOLON, "Esperava ';' após valor de retorno.");
         return new Stmt.Return(keyword, value);
     }
@@ -160,20 +154,17 @@ public class Parser {
         return new Stmt.If(condition, thenBranch, elseBranch);
     }
 
-    // Retorna bloco (se abre '{') ou uma declaração simples.
     private Stmt statementBlocoOuSimples() {
         if (match(TokenType.LEFTBRACE)) return block();
         else return declaration();
     }
 
-    // Parse do comando de input (ex: LEAI x;)
     private Stmt inputStatement() {
         Token name = consume(TokenType.IDENTIFIER, "Esperava nome da variável após 'LEAI'.");
         consume(TokenType.SEMICOLON, "Ou te falar ce esqueceu o ';' após LEAI.");
         return new Stmt.Input(name);
     }
 
-    // Parse de bloco: várias declarações entre {}
     private Stmt block() {
         List<Stmt> statements = new ArrayList<>();
         while (!check(TokenType.RIGHTBRACE) && !isAtEnd()) {
@@ -183,7 +174,6 @@ public class Parser {
         return new Stmt.Block(statements);
     }
 
-    // While clássico: WHILE (cond) { ... }
     private Stmt whileStatement() {
         consume(TokenType.LEFTPAREN, "Esperava '(' após while.");
         Expr condition = expression();
@@ -193,7 +183,6 @@ public class Parser {
         return new Stmt.While(condition, body);
     }
 
-    // SWITCH-case: ESCOLHEAI expr { CASO val: ... PADRAO: ... }
     private Stmt switchStatement() {
         Expr expr = expression();
         consume(TokenType.LEFTBRACE, "Esperava '{' após expressão do ESCOLHEAI.");
@@ -222,7 +211,6 @@ public class Parser {
         return new Stmt.Break();
     }
 
-    // VAR declaração: var x = 5;
     private Stmt varDeclaration() {
         Token name = consume(TokenType.IDENTIFIER, "Ou ce esqueceu o nome da variável.");
         Expr initializer = null;
@@ -231,24 +219,20 @@ public class Parser {
         return new Stmt.Var(name, initializer);
     }
 
-    // PRINT expressão; (escreve na tela)
     private Stmt printStatement() {
         Expr value = expression();
         consume(TokenType.SEMICOLON, "Ou te falar ce esqueceu o ';'.");
         return new Stmt.Print(value);
     }
 
-    // Declaração para uma expressão simples;
     private Stmt expressionStatement() {
         Expr expr = expression();
         consume(TokenType.SEMICOLON, "Ou te falar ce esqueceu o ';'.");
         return new Stmt.Expression(expr);
     }
 
-    // Avalia uma expressão, respeitando precedência dos operadores.
     private Expr expression() {return parsePrecedence(Precedence.ASSIGNMENT); }
 
-    // Avalia uma expressão pelo nível de precedência.
     private Expr parsePrecedence(Precedence precedence) {
         ParseRule prefixRule = getRule(peek().type);
         advance();
@@ -263,11 +247,9 @@ public class Parser {
             if (infixRule == null || infixRule.infix == null) return expr;
             expr = infixRule.infix.parse(this, expr);
         }
-
         return expr;
     }
 
-    // Exceções sintáticas mostrando contexto e linha do erro.
     private void error(Token token, String message) {
         throw new RuntimeException("Erro na linha " + token.line + ": " + message + " (encontrado: " + token.lexeme + ")");
     }
@@ -315,8 +297,8 @@ public class Parser {
 
     private static Expr literal(Parser parser) {
         Token token = parser.previous();
-        if (token.type == TokenType.TRUE) return new Expr.Literal(true);   // <-- Correção
-        if (token.type == TokenType.FALSE) return new Expr.Literal(false); // <-- Correção
+        if (token.type == TokenType.TRUE) return new Expr.Literal(true);
+        if (token.type == TokenType.FALSE) return new Expr.Literal(false);
         if (token.type == TokenType.NIL) return new Expr.Literal(null);
         return new Expr.Literal(token.literal);
     }
@@ -329,6 +311,36 @@ public class Parser {
         }
         Token paren = parser.consume(TokenType.RIGHTPAREN, "Esperava ')' após os argumentos da chamada.");
         return new Expr.Call(callee, paren, arguments);
+    }
+
+    // -------- INCREMENTO/DECREMENTO ---------
+
+    // Parse prefixo: ++i ou --i
+    private static Expr incremento(Parser parser) {
+        Token op = parser.previous(); // token '++'
+        Token varToken = parser.consume(TokenType.IDENTIFIER, "Esperava identificador após '++'.");
+        return new Expr.Incremento(varToken, op, true); // true = pré-incremento
+    }
+    private static Expr decremento(Parser parser) {
+        Token op = parser.previous();
+        Token varToken = parser.consume(TokenType.IDENTIFIER, "Esperava identificador após '--'.");
+        return new Expr.Decremento(varToken, op, true); // true = pré-decremento
+    }
+
+    // Parse infix: i++ ou i--
+    private static Expr incrementoInfix(Parser parser, Expr left) {
+        Token op = parser.previous(); // token '++'
+        if (!(left instanceof Expr.Variable))
+            throw new RuntimeException("Operador ++ só pode ser usado após variável.");
+        Token varToken = ((Expr.Variable) left).name;
+        return new Expr.Incremento(varToken, op, false); // false = pós-incremento
+    }
+    private static Expr decrementoInfix(Parser parser, Expr left) {
+        Token op = parser.previous();
+        if (!(left instanceof Expr.Variable))
+            throw new RuntimeException("Operador -- só pode ser usado após variável.");
+        Token varToken = ((Expr.Variable) left).name;
+        return new Expr.Decremento(varToken, op, false); // false = pós-decremento
     }
 
     // ****** Utilitários para navegação de tokens ******
@@ -362,6 +374,4 @@ public class Parser {
     private static ParseRule getRule(TokenType type) {
         return rules[type.ordinal()];
     }
-
-
 }

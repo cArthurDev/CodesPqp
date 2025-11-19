@@ -40,32 +40,24 @@ public class Compiler implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitInputStmt(Stmt.Input stmt) {
         int line = getCurrentLine(stmt.name);
-        //    A VM colocará o valor lido no topo da pilha.
+        // A VM colocará o valor lido no topo da pilha.
         currentChunk.write(OpCode.OP_INPUT, line);
 
-        // 2. Emite o opcode para guardar esse valor na variável global.
+        // Emite o opcode para guardar esse valor na variável global.
         int constIndex = currentChunk.addConstant(stmt.name.lexeme);
         currentChunk.write(OpCode.OP_SET_GLOBAL, line);
         currentChunk.write(constIndex, line);
-        //    e o OP_SET_GLOBAL apenas faz 'peek()'.
+        // e o OP_SET_GLOBAL apenas faz 'peek()'.
         currentChunk.write(OpCode.OP_POP, line);
 
         return null;
     }
 
-
-
-    // --- VISITORS DE EXPRESSÃO (Expr) ---
-
-    // --- Métodos de Visitor por implementar (Funções) ---
     @Override public Void visitCallExpr(Expr.Call expr) { /* TODO */ return null; }
     @Override public Void visitFunctionStmt(Stmt.Function stmt) { /* TODO */ return null; }
     @Override public Void visitReturnStmt(Stmt.Return stmt) { /* TODO */ return null; }
     @Override public Void visitBreakStmt(Stmt.Break stmt) { /* TODO */ return null; }
     @Override public Void visitSwitchStmt(Stmt.Switch stmt) { /* TODO */ return null; }
-
-    // --- Métodos Auxiliares para Saltos (Jumps) ---
-
 
     @Override
     public Void visitIfStmt(Stmt.If stmt) {
@@ -196,13 +188,60 @@ public class Compiler implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         return null;
     }
 
+    // --- NOVOS VISITORS: Incremento/Decremento ---
+    @Override
+    public Void visitIncrementoExpr(Expr.Incremento expr) {
+        // Operação: variável = variável + 1
+        int constIndex = currentChunk.addConstant(expr.name.lexeme);
+
+        // Obter valor atual
+        currentChunk.write(OpCode.OP_GET_GLOBAL, getCurrentLine(expr.name));
+        currentChunk.write(constIndex, getCurrentLine(expr.name));
+
+        // Carregar constante 1
+        currentChunk.write(OpCode.OP_CONSTANT, getCurrentLine(expr.name));
+        int oneIdx = currentChunk.addConstant(1);
+        currentChunk.write(oneIdx, getCurrentLine(expr.name));
+
+        // Soma
+        currentChunk.write(OpCode.OP_ADD, getCurrentLine(expr.name));
+
+        // Salvar na variável
+        currentChunk.write(OpCode.OP_SET_GLOBAL, getCurrentLine(expr.name));
+        currentChunk.write(constIndex, getCurrentLine(expr.name));
+        return null;
+    }
+
+    @Override
+    public Void visitDecrementoExpr(Expr.Decremento expr) {
+        // Operação: variável = variável - 1
+        int constIndex = currentChunk.addConstant(expr.name.lexeme);
+
+        // Obter valor atual
+        currentChunk.write(OpCode.OP_GET_GLOBAL, getCurrentLine(expr.name));
+        currentChunk.write(constIndex, getCurrentLine(expr.name));
+
+        // Carregar constante 1
+        currentChunk.write(OpCode.OP_CONSTANT, getCurrentLine(expr.name));
+        int oneIdx = currentChunk.addConstant(1);
+        currentChunk.write(oneIdx, getCurrentLine(expr.name));
+
+        // Subtração
+        currentChunk.write(OpCode.OP_SUBTRACT, getCurrentLine(expr.name));
+
+        // Salvar na variável
+        currentChunk.write(OpCode.OP_SET_GLOBAL, getCurrentLine(expr.name));
+        currentChunk.write(constIndex, getCurrentLine(expr.name));
+        return null;
+    }
+
+    // --- Auxiliares para jumps ---
     private int emitJump(OpCode jumpOpcode, int line) {
         currentChunk.write(jumpOpcode, line);
         currentChunk.write(0xFF, line);
         currentChunk.write(0xFF, line);
         return currentChunk.code.size() - 2;
     }
-
     private void patchJump(int offset) {
         int jump = currentChunk.code.size() - offset - 2;
         if (jump > 65535) {
@@ -211,7 +250,6 @@ public class Compiler implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         currentChunk.code.set(offset, (jump >> 8) & 0xFF);
         currentChunk.code.set(offset + 1, jump & 0xFF);
     }
-
     private void emitLoop(int loopStart, int line) {
         currentChunk.write(OpCode.OP_LOOP, line);
         int offset = currentChunk.code.size() - loopStart + 2;
