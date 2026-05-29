@@ -148,8 +148,6 @@ Nossa meta é código limpo, didática clara e aquele orgulho de ser um projeto 
 Este projeto foi desenvolvido com carinho por:
 
 * **[cArthurDev](https://github.com/cArthurDev)**
-* **[Maria-Cassis](https://github.com/Maria-Cassis)**
-* **[WaisGH](https://github.com/WaisGH)**
 
 *Inspirado nas aulas de Compiladores (2025), provando que dá para aprender se divertindo.*
 
